@@ -1,0 +1,5 @@
+# The serious wording for this module: only the lines that differ from messages.yml.
+conflict:
+  only-a-player: "<red>Only a player can use this."
+  pvp-status-off: "<gray>PvP is <green>off</green> for you. <white>/pvp on</white> to switch it on."
+  raid-switched-on: "<red>Raiding is on.</red> <gray>Other raiders' claims are open to you, and yours to them, TNT included. PvP comes with it. This stays for <white><days></white> days."

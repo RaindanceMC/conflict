@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.raindancer.modules</groupId>
+        <artifactId>conflict-build</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>conflict-module</artifactId>
+    <!-- Own version, independent of the reactor's, published on its own schedule. -->
+    <version>${conflict-module.version}</version>
+    <packaging>jar</packaging>
+
+    <name>Rain's Flexible Modules — Conflict</name>
+    <description>
+        PvP and raiding, opted into by each player: two players hurt each other only when both chose PvP, and
+        whoever chose raiding may break into the claims of others who did — their own claims are open to them in
+        return. Switching off takes effect only after a while, so nobody leaves a fight or a raid by typing.
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.raindancer.modules</groupId>
+            <artifactId>modules-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.raindancer.modules</groupId>
+            <artifactId>modules-api</artifactId>
+            <type>test-jar</type>
+            <version>${modules-api.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
