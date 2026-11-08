@@ -21,7 +21,7 @@ import java.util.List;
  */
 public final class ConflictModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("conflict", "Conflict", "0.1.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("conflict", "Conflict", "0.2.0")
             .describedAs("PvP and raiding, opt-in: /pvp and /raid")
             .by("Raindancer118");
 
@@ -52,16 +52,18 @@ public final class ConflictModule implements FlexModule {
             stances.replaceAll(loaded);
             context.log().info("{} player(s) chose PvP or raiding.", loaded.size());
         }, () -> context.log().warn("Could not read who chose PvP or raiding; nobody fights or raids until a restart reads it.")));
-        fights = new FightRule(stances, () -> settings.current().enabled());
+        fights = new FightRule(stances, () -> settings.current().enabled(), () -> settings.current().pvpOptIn());
         raids = new RaidRule(stances, () -> settings.current().enabled());
         core.combat().alsoAsk(context.plugin().getName(), fights);
         core.land().alsoAllow(raids);
         core.messages().overrideFor(context.plugin().getName(), "combat.no-pvp", "conflict.no-pvp");
         ConflictCommands.ready(new ConflictServices(context.plugin(), context.plugin().getServer(), context.log(),
                 core.messages(), settings::current, stances, store, System::currentTimeMillis));
-        context.log().info("Conflict is up: PvP and raiding are {}, a switch changes every {} day(s).",
-                settings.current().enabled() ? "opt-in" : "off (the server's own rules apply)",
-                settings.current().changeEveryDays());
+        ConflictSettings now = settings.current();
+        context.log().info("Conflict is up: {}, a switch changes every {} day(s).",
+                !now.enabled() ? "off (the server's own rules apply)"
+                        : now.pvpOptIn() ? "PvP and raiding are opt-in" : "raiding is opt-in, PvP follows the server's rules",
+                now.changeEveryDays());
     }
 
     @Override

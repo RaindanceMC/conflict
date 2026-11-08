@@ -20,7 +20,7 @@
 
     <!-- This repository's own versions: bump them here. CI publishes a new version on the next push to master. -->
     <properties>
-        <conflict-module.version>0.1.0</conflict-module.version>
+        <conflict-module.version>0.2.0</conflict-module.version>
         <!-- 2.70.0: Land.alsoAllow (a raid opens a claim), TNT counted as whoever lit it -->
         <rainscore.version>2.70.0</rainscore.version>
     </properties>

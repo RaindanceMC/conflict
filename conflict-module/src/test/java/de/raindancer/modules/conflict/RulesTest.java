@@ -29,7 +29,8 @@ class RulesTest {
 
     private final Stances stances = new Stances();
     private final AtomicBoolean enabled = new AtomicBoolean(true);
-    private final FightRule fights = new FightRule(stances, enabled::get);
+    private final AtomicBoolean pvpOptIn = new AtomicBoolean(true);
+    private final FightRule fights = new FightRule(stances, enabled::get, pvpOptIn::get);
     private final RaidRule raids = new RaidRule(stances, enabled::get);
 
     private static Player player(UUID id) {
@@ -75,5 +76,15 @@ class RulesTest {
         assertThat(raids.allows(player(ADA), ownedBy(UUID.randomUUID()), LandAction.BREAK)).isFalse();
         enabled.set(false);
         assertThat(raids.allows(player(ADA), ownedBy(BO), LandAction.BREAK)).isFalse();
+    }
+
+    @Test
+    @DisplayName("the PvP switch turned off server-side: no opinion on any fight (server and claims decide), raids still work")
+    void pvpSwitchOff() {
+        pvpOptIn.set(false);
+        assertThat(fights.apply(Attack.between(ADA, BO, "world"))).isNull();
+        stances.change(ADA, Stance.Kind.RAID, true, 1, WEEK, false);
+        stances.change(BO, Stance.Kind.RAID, true, 1, WEEK, false);
+        assertThat(raids.allows(player(ADA), ownedBy(BO), LandAction.BREAK)).isTrue();
     }
 }

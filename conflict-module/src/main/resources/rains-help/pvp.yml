@@ -1,0 +1,61 @@
+id: pvp
+title: PvP
+summary: Whether other players can fight you — your choice, with /pvp. Nobody hits you who didn't choose it too.
+intro: |
+  Some people log in to build a cathedral, some to hit people with swords. Here both get what they came for — as long as they agree about it.
+icon: IRON_SWORD
+category: Games
+order: 20
+module: conflict
+when: "conflict:enabled"
+aliases: [pvp, fight, fighting, combat, duel]
+keywords: [pvp, fight, combat, sword, kill, attack, safe, peaceful, opt-in, switch]
+commands: [pvp]
+sections:
+  - question: Can other players hurt me?
+    title: Who can hurt you
+    when: "conflict:pvp-opt-in"
+    text: |
+      Only if you <i>both</i> chose PvP. Two players can fight each other when each of them typed {cmd:/pvp on} — if either of you has it off, swords, arrows, potions and pets do nothing to the other.
+      Where you stand right now: {run:/pvp}.
+  - question: Can other players hurt me?
+    title: Who can hurt you
+    when: "!conflict:pvp-opt-in"
+    text: |
+      PvP is not a personal choice on this server: whether players can fight follows the server's own rules and the rules of the claim you stand in. There is no {cmd:/pvp} switch here — but raiding is still yours to choose: {topic:raiding}.
+  - question: How do I switch PvP on or off?
+    title: The switch
+    when: "conflict:pvp-opt-in"
+    text: |
+      {run:/pvp on} — you can fight anybody else who has it on, and they you.
+      {run:/pvp off} — nobody can hurt you, you can't hurt anybody.
+      {run:/pvp} shows where you stand, and when you may change it next.
+  - question: Why can't I switch it back?
+    title: Once a week
+    when: "conflict:pvp-opt-in"
+    text: |
+      A switch stays as you set it for {setting:conflict:change-every-days|days}. Otherwise PvP would be on exactly until somebody starts losing. Choose when you mean it.
+      Picked the wrong one by accident? Ask the staff — they can change it for you.
+  - question: Is it safe everywhere when PvP is off?
+    title: Safe places
+    text: |
+      With PvP off nobody can hurt you anywhere. With it on, a claim can still be a safe place: if its owner switched PvP off for the claim, nobody fights there — not even two players who both chose PvP.
+  - question: Why can I still be hit with PvP off?
+    title: Raiders and PvP
+    when: "conflict:pvp-opt-in"
+    text: |
+      Because you raid. Whoever switched raiding on ({cmd:/raid}) has PvP on as well, whatever {cmd:/pvp} says — breaking into somebody's base and then being unhittable would be a little too convenient. See the guide about raiding: {topic:raiding}.
+  - question: Can I change somebody's PvP?
+    title: For someone else
+    permission: rainsconflict.others
+    when: "conflict:pvp-opt-in"
+    text: |
+      Staff can: {cmd:/pvp <player> on|off} — also inside their weekly lock, for somebody who chose by mistake. That player is told if they're online.
+  - question: What can staff change here?
+    title: Staff settings
+    permission: rainscore.settings
+    text: |
+      {run:/settings} has a page "PvP and raiding":
+      Opt-in PvP and raiding at all — {setting:conflict:enabled|onoff}.
+      The /pvp switch — {setting:conflict:pvp-opt-in|onoff}; off, PvP follows the server's and the claims' own rules and only raiding stays a choice.
+      Days between two changes — {setting:conflict:change-every-days|days}.

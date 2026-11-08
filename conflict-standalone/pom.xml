@@ -22,8 +22,10 @@
 
     <properties>
         <plugin.name>RainsConflict</plugin.name>
-        <!-- 0.1.0: /pvp and /raid, opt-in; raiders open each other's claims (Core's Land.alsoAllow), their TNT too. -->
-        <plugin.version>0.1.0</plugin.version>
+        <!-- 0.1.0: /pvp and /raid, opt-in; raiders open each other's claims (Core's Land.alsoAllow), their TNT too.
+             0.2.0: pvp-opt-in setting (off: no /pvp, PvP follows the server's and claims' rules); /help guides
+                    "PvP" and "Raiding". -->
+        <plugin.version>0.2.0</plugin.version>
     </properties>
 
     <dependencies>

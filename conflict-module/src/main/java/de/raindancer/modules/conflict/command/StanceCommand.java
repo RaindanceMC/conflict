@@ -41,6 +41,10 @@ public final class StanceCommand implements BasicCommand {
             live.messages().send(sender, "conflict.not-enabled");
             return;
         }
+        if (kind == Stance.Kind.PVP && !live.settings().get().pvpOptIn()) {
+            live.messages().send(sender, "conflict.pvp-switch-off");
+            return;
+        }
         String first = args.length == 0 ? "status" : args[0].toLowerCase(Locale.ROOT);
         if (first.equals("on") || first.equals("off") || first.equals("status")) {
             if (!(sender instanceof Player self)) {
@@ -72,12 +76,19 @@ public final class StanceCommand implements BasicCommand {
         Stance stance = stances.of(self.getUniqueId());
         boolean on = kind == Stance.Kind.PVP ? stances.pvp(self.getUniqueId()) : stance.raid();
         String key = on ? k("status-on") : k("status-off");
+        if (kind == Stance.Kind.RAID && on && live.settings().get().pvpOptIn()) {
+            live.messages().send(self, key);
+            live.messages().send(self, "conflict.raid-brings-pvp");
+            key = null;
+        }
         if (kind == Stance.Kind.PVP && on && !stance.pvp()) {
             key = "conflict.pvp-status-raiding";
         }
         long next = stance.changedAt(kind) + live.settings().get().cooldownMillis();
         long now = live.clock().getAsLong();
-        live.messages().send(self, key);
+        if (key != null) {
+            live.messages().send(self, key);
+        }
         if (stance.changedAt(kind) > 0 && now < next) {
             live.messages().send(self, "conflict.locked-until", "time", Times.describe(Duration.ofMillis(next - now)));
         }
@@ -102,6 +113,9 @@ public final class StanceCommand implements BasicCommand {
                         live.messages().send(target.getPlayer(), on ? k("switched-on") : k("switched-off"),
                                 "days", String.valueOf(live.settings().get().changeEveryDays()));
                     }
+                }
+                if (kind == Stance.Kind.RAID && on && live.settings().get().pvpOptIn()) {
+                    live.messages().send(sender, "conflict.raid-brings-pvp");
                 }
                 if (kind == Stance.Kind.PVP && !on && live.stances().raids(target.getUniqueId())) {
                     live.messages().send(sender, "conflict.pvp-held-by-raiding");

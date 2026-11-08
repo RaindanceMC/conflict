@@ -1,0 +1,50 @@
+id: raiding
+title: Raiding
+summary: Break into other players' bases — and leave yours open to them. Only between players who chose it with /raid.
+intro: |
+  Claims keep your base safe. Unless you'd rather it weren't: raiders may break into each other's claims as if they owned them. Everybody else's claims stay closed — to raiders too.
+icon: TNT
+category: Land & building
+order: 40
+module: conflict
+when: "conflict:enabled"
+aliases: [raid, raids, raiding, griefing, base, bases, siege]
+keywords: [raid, raiding, base, claim, tnt, break, steal, chest, opt-in, switch, attack, defend]
+commands: [raid]
+sections:
+  - question: What is raiding?
+    title: What it is
+    text: |
+      If you switched raiding on, you may do in another raider's claim everything its owner may: break and place blocks, open chests and doors, use redstone, take the animals — and blow it up with TNT. Your own claims are open to every other raider in exactly the same way.
+      Claims of players who don't raid stay closed to you, as always. A claim with several owners is open only when <i>every</i> owner raids. Ground that belongs to the server never is.
+  - question: What can a raider not do in my claim?
+    title: What stays yours
+    text: |
+      Managing it. A raider can't change your claim's settings or flags, add or remove members, rename it, move its borders or delete it. They can take what's in it — not the claim itself.
+  - question: How do I switch raiding on or off?
+    title: The switch
+    text: |
+      {if:@perm:rainsconflict.use}{run:/raid on} opens other raiders' claims to you — and yours to them. {run:/raid off} closes both again. {run:/raid} shows where you stand and when you may change it next.{else}With {cmd:/raid on} and {cmd:/raid off}; {cmd:/raid} shows where you stand.{/if}
+      {if:conflict:pvp-opt-in}PvP comes with raiding: a raider can always be hit back, whatever {cmd:/pvp} says.{/if}
+  - question: Why can't I switch it off right now?
+    title: Once a week
+    text: |
+      After a change the switch holds for {setting:conflict:change-every-days|days}. That is on purpose: otherwise everybody would raid happily and switch off the moment someone came knocking. If you switch it on, plan to defend for a while.
+      Picked it by accident? Ask the staff — they can change it for you.
+  - question: Can I protect a raidable base?
+    title: Defending
+    text: |
+      Walls, traps, hidden chests and friends. Claim flags don't stop raiders — not even keep-out or explosion flags — so build like it matters. Whatever is in an ender chest is yours alone.
+  - question: Can I change somebody's raiding?
+    title: For someone else
+    permission: rainsconflict.others
+    text: |
+      Staff can: {cmd:/raid <player> on|off} — also inside their weekly lock, for somebody who chose by mistake. That player is told if they're online.
+  - question: What can staff change here?
+    title: Staff settings
+    permission: rainscore.settings
+    text: |
+      {run:/settings} has a page "PvP and raiding":
+      Opt-in PvP and raiding at all — {setting:conflict:enabled|onoff}.
+      Days between two changes — {setting:conflict:change-every-days|days}.
+      Whether PvP is a choice too — {setting:conflict:pvp-opt-in|onoff}.

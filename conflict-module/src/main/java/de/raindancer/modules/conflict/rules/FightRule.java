@@ -10,21 +10,24 @@ import java.util.function.Function;
 
 /**
  * Core's {@code Combat.alsoAsk}: two players who did not both choose PvP may not hurt each other. Both chose: no
- * opinion, so a claim's safe flag or a peaceful world still has its say.
+ * opinion, so a claim's safe flag or a peaceful world still has its say. With the PvP switch turned off server-side
+ * ({@code pvp-opt-in}) it has no opinion at all: PvP is the server's and the claims' business again.
  */
 public final class FightRule implements Function<Attack, Verdict> {
 
     private final Stances stances;
     private final BooleanSupplier enabled;
+    private final BooleanSupplier pvpOptIn;
 
-    public FightRule(Stances stances, BooleanSupplier enabled) {
+    public FightRule(Stances stances, BooleanSupplier enabled, BooleanSupplier pvpOptIn) {
         this.stances = stances;
         this.enabled = enabled;
+        this.pvpOptIn = pvpOptIn;
     }
 
     @Override
     public Verdict apply(Attack attack) {
-        if (!enabled.getAsBoolean() || attack == null || !attack.isPlayerVersusPlayer()) {
+        if (!enabled.getAsBoolean() || !pvpOptIn.getAsBoolean() || attack == null || !attack.isPlayerVersusPlayer()) {
             return null;
         }
         UUID attacker = attack.attackerOf().orElse(null);
