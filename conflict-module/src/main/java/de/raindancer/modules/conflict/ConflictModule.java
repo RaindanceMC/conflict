@@ -21,7 +21,7 @@ import java.util.List;
  */
 public final class ConflictModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("conflict", "Conflict", "0.2.0")
+    private static final ModuleInfo INFO = ModuleInfo.of("conflict", "Conflict", "0.2.1")
             .describedAs("PvP and raiding, opt-in: /pvp and /raid")
             .by("Raindancer118");
 
