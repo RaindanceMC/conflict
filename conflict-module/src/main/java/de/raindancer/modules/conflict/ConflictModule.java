@@ -40,7 +40,6 @@ public final class ConflictModule implements FlexModule {
         core = context.core();
         core.messages().defineFrom(ConflictModule.class.getResourceAsStream("messages.yml"),
                 context.chat().brand()::chatPrefix);
-        core.messages().seriousFrom(ConflictModule.class.getResourceAsStream("messages-serious.yml"));
         int registered = PermissionNodes.register(context.plugin().getServer());
         if (registered > 0) {
             context.log().info("{} permission(s) registered.", registered);
