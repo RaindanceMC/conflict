@@ -21,11 +21,11 @@ public final class ConflictCommands {
         return List.of(
                 ModuleCommand.of("pvp", "Chooses whether other players who chose PvP can fight you",
                                 new StanceCommand(Stance.Kind.PVP, ConflictCommands::require))
-                        .taking("(nothing) — where you stand", "on | off", "<player> on | off — for staff")
+                        .taking("(nothing): shows your status", "on | off", "<player> on | off: for staff")
                         .needing("rainsconflict.use"),
-                ModuleCommand.of("raid", "Chooses whether you raid bases - and your own can be raided",
+                ModuleCommand.of("raid", "Chooses whether you raid bases and your own can be raided",
                                 new StanceCommand(Stance.Kind.RAID, ConflictCommands::require))
-                        .taking("(nothing) — where you stand", "on | off", "<player> on | off — for staff")
+                        .taking("(nothing): shows your status", "on | off", "<player> on | off: for staff")
                         .needing("rainsconflict.use"));
     }
 

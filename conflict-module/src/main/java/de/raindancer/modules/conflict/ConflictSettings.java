@@ -17,7 +17,7 @@ public record ConflictSettings(
 
         @In("conflict") @Title("PvP and raiding are opt-in")
         @Describe("On: two players hurt each other only when both chose PvP (/pvp), and raiders (/raid) may do "
-                + "everything an owner may in the claims of other raiders - their own claims are open to them in "
+                + "everything an owner may in the claims of other raiders, and their own claims are open to them in "
                 + "return. Off: the server's and the claims' own PvP rules apply, and claims are closed as usual.")
         @Key("enabled")
         boolean enabled,
