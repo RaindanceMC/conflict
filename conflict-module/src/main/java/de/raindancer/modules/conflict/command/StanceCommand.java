@@ -2,6 +2,7 @@ package de.raindancer.modules.conflict.command;
 
 import de.raindancer.core.platform.util.Times;
 import de.raindancer.modules.conflict.ConflictServices;
+import de.raindancer.modules.conflict.StanceChange;
 import de.raindancer.modules.conflict.model.Stance;
 import de.raindancer.modules.conflict.model.Stances;
 import de.raindancer.modules.conflict.util.PermissionNodes;
@@ -30,19 +31,14 @@ public final class StanceCommand implements BasicCommand {
     }
 
     private String k(String key) {
-        return "conflict." + (kind == Stance.Kind.PVP ? "pvp-" : "raid-") + key;
+        return StanceChange.prefix(kind) + key;
     }
 
     @Override
     public void execute(CommandSourceStack source, String[] args) {
         ConflictServices live = services.get();
         CommandSender sender = source.getSender();
-        if (!live.settings().get().enabled()) {
-            live.messages().send(sender, "conflict.not-enabled");
-            return;
-        }
-        if (kind == Stance.Kind.PVP && !live.settings().get().pvpOptIn()) {
-            live.messages().send(sender, "conflict.pvp-switch-off");
+        if (new StanceChange(kind, live).refuseIfOff(sender)) {
             return;
         }
         String first = args.length == 0 ? "status" : args[0].toLowerCase(Locale.ROOT);
@@ -95,35 +91,7 @@ public final class StanceCommand implements BasicCommand {
     }
 
     private void change(ConflictServices live, CommandSender sender, OfflinePlayer target, boolean on, boolean force) {
-        Stances.Result result = live.change(target.getUniqueId(), kind, on, force);
-        boolean self = sender instanceof Player player && player.getUniqueId().equals(target.getUniqueId());
-        String name = target.getName() == null ? target.getUniqueId().toString() : target.getName();
-        switch (result.outcome()) {
-            case ALREADY -> live.messages().send(sender, on ? k("already-on") : k("already-off"), "player", name);
-            case LOCKED -> live.messages().send(sender, "conflict.locked", "time",
-                    Times.describe(Duration.ofMillis(result.lockedUntil() - live.clock().getAsLong())),
-                    "days", String.valueOf(live.settings().get().changeEveryDays()));
-            case CHANGED -> {
-                if (self) {
-                    live.messages().send(sender, on ? k("switched-on") : k("switched-off"),
-                            "days", String.valueOf(live.settings().get().changeEveryDays()));
-                } else {
-                    live.messages().send(sender, on ? k("others-on") : k("others-off"), "player", name);
-                    if (target.getPlayer() != null) {
-                        live.messages().send(target.getPlayer(), on ? k("switched-on") : k("switched-off"),
-                                "days", String.valueOf(live.settings().get().changeEveryDays()));
-                    }
-                }
-                if (kind == Stance.Kind.RAID && on && live.settings().get().pvpOptIn()) {
-                    live.messages().send(sender, "conflict.raid-brings-pvp");
-                }
-                if (kind == Stance.Kind.PVP && !on && live.stances().raids(target.getUniqueId())) {
-                    live.messages().send(sender, "conflict.pvp-held-by-raiding");
-                }
-                live.log().info("{} chose {} {} for {}{}.", sender.getName(), kind == Stance.Kind.PVP ? "PvP" : "raiding",
-                        on ? "on" : "off", name, force ? " (staff, past the lock)" : "");
-            }
-        }
+        new StanceChange(kind, live).apply(sender, target, on, force);
     }
 
     @Override

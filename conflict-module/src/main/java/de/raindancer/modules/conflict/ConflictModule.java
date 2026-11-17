@@ -21,7 +21,7 @@ import java.util.List;
  */
 public final class ConflictModule implements FlexModule {
 
-    private static final ModuleInfo INFO = ModuleInfo.of("conflict", "Conflict", "0.2.1")
+    private static final ModuleInfo INFO = ModuleInfo.of("conflict", "Conflict", "0.3.0")
             .describedAs("PvP and raiding, opt-in: /pvp and /raid")
             .by("Raindancer118");
 
@@ -56,8 +56,18 @@ public final class ConflictModule implements FlexModule {
         core.combat().alsoAsk(context.plugin().getName(), fights);
         core.land().alsoAllow(raids);
         core.messages().overrideFor(context.plugin().getName(), "combat.no-pvp", "conflict.no-pvp");
-        ConflictCommands.ready(new ConflictServices(context.plugin(), context.plugin().getServer(), context.log(),
-                core.messages(), settings::current, stances, store, System::currentTimeMillis));
+        ConflictServices services = new ConflictServices(context.plugin(), context.plugin().getServer(), context.log(),
+                core.messages(), settings::current, stances, store, System::currentTimeMillis);
+        ConflictCommands.ready(services);
+        // The switches are on /preferences (Core 2.103.0); /pvp and /raid work without it.
+        try {
+            for (var preference : de.raindancer.modules.conflict.preference.StancePreferences.of(services)) {
+                de.raindancer.core.ui.preference.Preferences.offer(context.plugin(), preference);
+                context.closeWith(() -> de.raindancer.core.ui.preference.Preferences.withdraw(preference));
+            }
+        } catch (LinkageError olderCore) {
+            context.log().info("RainsCore is older than 2.103.0: PvP is not on /preferences.");
+        }
         ConflictSettings now = settings.current();
         context.log().info("Conflict is up: {}, a switch changes every {} day(s).",
                 !now.enabled() ? "off (the server's own rules apply)"
